@@ -1,0 +1,58 @@
+<head>
+  <title>caed-hack</title>
+</head>
+
+<body>
+  {{> hello}}
+</body>
+
+<template name="hello">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Search Engine!</h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<form id="search-form">
+					<input type="text" name="query" class="form-control" placeholder="Search Query" />
+					<br />
+					<select multiple="true" size="12" class="form-control" name="speaker">
+						<option disabled>Select Speakers</option>
+						{{ #each allSpeakers }}
+							<option value="{{ this }}">{{ this }}</option>
+						{{ /each }}
+					</select>
+					<br />
+					<input type="text" name="inner-query" class="form-control" placeholder="Inner Query" />
+					<br />
+					<input type="button" value="Search" class="btn btn-primary">
+				</form>
+			</div>
+			<div class="col-sm-8">
+				{{ #if fetching }}
+					{{> spinner}}
+				{{ /if }}
+				{{ #each results }}
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">{{ _source.title }}</h3>
+						</div>
+						<div class="panel-body">
+							{{ #each inner_hits.paragraphs.hits.hits }}
+								<p>
+									<b>{{ _source.speaker }}</b>: "<i>{{ _source.speech }}</i>"<br />
+									{{ #with speaker_references }}
+										<small>Speaker References: <u>{{ this }}</u></small>
+									{{ /with }}
+								</p>
+							{{ /each }}
+						</div>
+					</div>
+				{{ /each }}
+			</div>
+		</div>
+	</div>
+</template>
